@@ -1,0 +1,41 @@
+group 'blue.sparse'
+version '1.0-SNAPSHOT'
+
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'maven-publish'
+
+	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
+
+	group 'blue.sparse.bukkit-shade'
+
+	repositories {
+		mavenCentral()
+		mavenLocal()
+		maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots" }
+		maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+	}
+
+	dependencies {
+		compileOnly 'org.spigotmc:spigot-api:1.8-R0.1-SNAPSHOT'
+	}
+
+	publishing {
+		publications {
+			mavenJava(MavenPublication) {
+				groupId project.group
+				artifactId project.name
+				version project.version
+				from components.java
+			}
+		}
+
+		repositories {
+			maven {
+				name = "sparse"
+				url "F:\\maven"
+			}
+		}
+	}
+}

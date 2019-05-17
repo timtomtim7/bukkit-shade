@@ -1,0 +1,4 @@
+name: Test
+version: v1.0
+author: Tom
+main: blue.sparse.bshade.command.test.TestPlugin

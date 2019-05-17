@@ -1,0 +1,5 @@
+message:
+  noArgs: "&cUsage: &6/message <player> <content...>"
+  args:
+    target: "&cUsage: &a/message &6&l<player> &8<content...>"
+    content: "&cUsage: &a/message <player> &6&l<content...>"
