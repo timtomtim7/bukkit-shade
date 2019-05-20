@@ -40,9 +40,6 @@ public class TestPlugin extends JavaPlugin {
 			items.add(weird);
 		}
 
-		System.out.println(items);
-		System.out.println(countWeird);
-
 //		final List<ItemStack> newItems = ItemStackUtil.mergeStacks(items, true);
 //		System.out.println(newItems);
 	}

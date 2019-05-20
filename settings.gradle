@@ -1,7 +1,59 @@
 rootProject.name = 'bukkit-shade'
 
-['commands', 'persistent', 'util'].each {
-	include "modules/$it"
-	findProject(":modules/$it")?.name = it
+def collect = new ArrayList<String>()
+def nmsNames = new File(rootProject.projectDir.absolutePath, "modules/versions/nms.txt")
+println nmsNames.absolutePath
+def lineIndex = 0
+def current = new StringBuilder()
+for (line in nmsNames.readLines()) {
+    if (lineIndex < 3) {
+        current.append(line + "\n")
+        lineIndex++
+        continue
+    }
+
+    def list = current.toString().readLines()
+    def spigotVersion = list[0].trim()
+    def nmsVersion = list[1].split(":")[1].trim()
+    lineIndex = 0
+    current = new StringBuilder()
+
+    def modulePath = "versions/" + nmsVersion
+    def fullModulePath = "modules/" + modulePath
+    if (collect.contains(modulePath))
+        continue
+
+    collect.add(modulePath)
+    def buildFile = new File(fullModulePath, "build.gradle")
+    def srcFolder = new File(fullModulePath, "src/main/java/blue/sparse/bshade/versions/v" + nmsVersion)
+    if(!srcFolder.exists()) {
+        srcFolder.mkdirs()
+    }
+
+    if (!buildFile.exists()) {
+        buildFile.createNewFile()
+        buildFile.write(String.format("""
+        version '1.0-SNAPSHOT'
+
+        dependencies {
+            compile project(":versions")
+            implementation fileTree("../jars/spigot-%s.jar")
+        }
+
+        jar {
+            from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        }
+""".stripIndent(), spigotVersion))
+    }
 }
 
+collect.addAll(["commands", "persistent", "util", "versions"])
+
+collect.each {
+    setupModule(it)
+}
+
+void setupModule(String str) {
+    include "modules/$str"
+    findProject(":modules/$str")?.name = str.split("/").last()
+}

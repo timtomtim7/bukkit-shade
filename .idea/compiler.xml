@@ -2,10 +2,50 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
+      <module name="blue.sparse.bukkit-shade.[commands].main" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.[commands].test" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.[persistent].main" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.[persistent].test" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.[util].main" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.[util].test" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.[versions,_v1_14_R1].main" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.[versions,_v1_14_R1].test" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.[versions].main" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.[versions].test" target="1.8" />
       <module name="blue.sparse.bukkit-shade.modules.main" target="11" />
       <module name="blue.sparse.bukkit-shade.modules.test" target="11" />
+      <module name="blue.sparse.bukkit-shade.v.main" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.v.test" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.v1_1.main" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.v1_1.test" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.v1_13_R.main" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.v1_13_r.main" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.v1_13_r.test" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.v1_13_R.test" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.v1_13_R1.main" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.v1_13_R1.test" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.v1_13_R2.main" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.v1_13_R2.test" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.v1_14_R1.main" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.v1_14_R1.test" target="1.8" />
       <module name="blue.sparse.commands.main" target="1.8" />
       <module name="blue.sparse.commands.test" target="1.8" />
+      <module name="blue.sparse.v1_14_R1.main" target="1.8" />
+      <module name="blue.sparse.v1_14_R1.test" target="1.8" />
+      <module name="commands.blue.sparse.bukkit-shade.commands.main" target="1.8" />
+      <module name="commands.blue.sparse.bukkit-shade.commands.test" target="1.8" />
+      <module name="persistent.blue.sparse.bukkit-shade.persistent.main" target="1.8" />
+      <module name="persistent.blue.sparse.bukkit-shade.persistent.test" target="1.8" />
+      <module name="util.blue.sparse.bukkit-shade.util.main" target="1.8" />
+      <module name="util.blue.sparse.bukkit-shade.util.test" target="1.8" />
+      <module name="v1_13_R1.blue.sparse.bukkit-shade.v1_13_R1.main" target="1.8" />
+      <module name="v1_13_R1.blue.sparse.bukkit-shade.v1_13_R1.test" target="1.8" />
+      <module name="v1_13_R2.blue.sparse.bukkit-shade.v1_13_R2.main" target="1.8" />
+      <module name="v1_13_R2.blue.sparse.bukkit-shade.v1_13_R2.test" target="1.8" />
+      <module name="v1_14_R1.blue.sparse.bukkit-shade.v1_14_R1.main" target="1.8" />
+      <module name="v1_14_R1.blue.sparse.bukkit-shade.v1_14_R1.test" target="1.8" />
+      <module name="versions.blue.sparse.bukkit-shade.versions.main" target="1.8" />
+      <module name="versions.blue.sparse.bukkit-shade.versions.test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
