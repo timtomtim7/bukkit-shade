@@ -1,6 +1,7 @@
 package blue.sparse.bshade.versions.holograms;
 
-import blue.sparse.bshade.versions.Scroller;
+import blue.sparse.bshade.versions.util.ColoredScroller;
+import blue.sparse.bshade.versions.util.Scroller;
 
 import java.util.function.IntFunction;
 
@@ -8,12 +9,12 @@ public class HologramLineScrolling extends HologramLine {
 
     private int tickRate;
     private int width;
-    private Scroller scroller;
+    private ColoredScroller scroller;
 
     public HologramLineScrolling(int tickRate, int width, IntFunction<String> function) {
         this.tickRate = tickRate;
         this.width = width;
-        scroller = new Scroller(width, function);
+        scroller = new ColoredScroller(width, function);
     }
 
     public HologramLineScrolling(int tickRate, int width, String content) {

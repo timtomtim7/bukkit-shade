@@ -30,10 +30,28 @@ public class TestPlugin extends JavaPlugin {
         Player player = (Player) sender;
 
         if(hologram == null) {
+            final ChatColor[] colors = Arrays.stream(ChatColor.values())
+                    .filter(ChatColor::isColor)
+                    .filter(it ->
+                            it != ChatColor.BLACK &&
+                            it != ChatColor.WHITE &&
+                            it != ChatColor.GRAY &&
+                            it != ChatColor.DARK_GRAY
+                    )
+                    .toArray(ChatColor[]::new);
+
+            final ChatColor[] modifiers = Arrays.stream(ChatColor.values())
+                    .filter(ChatColor::isFormat)
+                    .toArray(ChatColor[]::new);
+
             hologram = new Hologram(player.getLocation(), new HologramLineScrolling(
                     2,
                     50,
-                    ChatColor.translateAlternateColorCodes('&', "&b&lTom1024 &7was born on &7&lOctober 39th, 2075. ")
+                    i -> {
+                        final ChatColor color = colors[ThreadLocalRandom.current().nextInt(colors.length)];
+                        final ChatColor modifier = modifiers[ThreadLocalRandom.current().nextInt(modifiers.length)];
+                        return String.format("%s%sCOLORS\u00a7r ", color, modifier);
+                    }
             ));
             return true;
         }

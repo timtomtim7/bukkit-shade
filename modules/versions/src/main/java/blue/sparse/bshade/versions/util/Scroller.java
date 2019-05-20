@@ -1,24 +1,28 @@
-package blue.sparse.bshade.versions;
+package blue.sparse.bshade.versions.util;
 
 import java.util.function.IntFunction;
 
 public class Scroller {
-    private StringBuilder current = new StringBuilder();
-    private IntFunction<String> content;
-    private int contentIndex;
-    private int width;
-    private int offset;
+    protected StringBuilder current = new StringBuilder();
+    protected IntFunction<String> content;
+    protected int contentIndex;
+    protected int width;
+    protected int offset;
 
     public Scroller(int width, IntFunction<String> content) {
         this.width = width;
         this.content = content;
     }
 
-    private void ensureContent(int position, int length) {
+    protected void cutExtra(int position) {
+        int diff = position - offset;
+        offset = position;
+        current.delete(0, diff);
+    }
+
+    protected void ensureContent(int position, int length) {
         if (position % 10 == 0) {
-            int diff = position - offset;
-            offset = position;
-            current.delete(0, diff);
+            cutExtra(position);
         }
 
         int relativePosition = position - offset;
