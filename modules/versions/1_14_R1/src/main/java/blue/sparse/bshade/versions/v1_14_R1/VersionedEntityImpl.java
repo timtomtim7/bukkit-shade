@@ -47,7 +47,7 @@ public class VersionedEntityImpl extends VersionedEntity {
             drops.setAccessible(true);
             drops.set(livingNmsEntity, items);
 
-            Method addDropsMethod = EntityLiving.class.getDeclaredMethod("a", boolean.class, int.class, DamageSource.class);
+            Method addDropsMethod = EntityLiving.class.getDeclaredMethod("a", DamageSource.class, boolean.class);
             addDropsMethod.setAccessible(true);
 
             if(forceLooting) {
@@ -56,9 +56,6 @@ public class VersionedEntityImpl extends VersionedEntity {
                         return false;
                     }
                     public boolean isCreative() {
-                        return false;
-                    }
-                    public boolean u() {
                         return false;
                     }
                 };
@@ -81,7 +78,7 @@ public class VersionedEntityImpl extends VersionedEntity {
                 }
             }
 
-            addDropsMethod.invoke(livingNmsEntity, true, looting, lastDamageSource);
+            addDropsMethod.invoke(livingNmsEntity, lastDamageSource, true);
 
             drops.set(livingNmsEntity, new ArrayList<>());
         } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {

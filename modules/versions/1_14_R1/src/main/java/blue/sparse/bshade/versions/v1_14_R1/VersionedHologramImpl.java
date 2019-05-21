@@ -80,7 +80,6 @@ public class VersionedHologramImpl extends VersionedHologram {
                     location.getPitch()
             );
 
-
             sendPacketNearby(new PacketPlayOutEntityTeleport(stand));
             sendPacketNearby(new PacketPlayOutEntityMetadata(stand.getId(), stand.getDataWatcher(), true));
             yOffset -= hologram.getLineSpacing();

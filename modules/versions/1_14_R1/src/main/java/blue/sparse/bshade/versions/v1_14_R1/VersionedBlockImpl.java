@@ -12,8 +12,10 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public class VersionedBlockImpl extends VersionedBlock {
 
@@ -55,44 +57,23 @@ public class VersionedBlockImpl extends VersionedBlock {
 
     @Override
     public int getBreakTicks() {
-        return (int) (1f / getNmsBlock().getBlockData().e(getNmsBlockAccess(), getNmsBlockPosition()));
+        return (int) (1f / getNmsBlock().getBlockData().f(getNmsBlockAccess(), getNmsBlockPosition()));
     }
 
     @Override
     public List<ItemStack> getDrops(ItemStack tool) {
-        List<ItemStack> items = new ArrayList<>();
         Block nmsBlock = getNmsBlock();
         IBlockData blockData = nmsBlock.getBlockData();
         BlockPosition blockPosition = getNmsBlockPosition();
         CraftWorld craftWorld = (CraftWorld) block.getWorld();
         WorldServer nmsWorld = craftWorld.getHandle();
-        List<net.minecraft.server.v1_14_R1.ItemStack> nmsItems = new ArrayList<>();
         net.minecraft.server.v1_14_R1.ItemStack nmsTool = CraftItemStack.asNMSCopy(tool);
 
-        if(nmsBlock instanceof BlockTileEntity) {
-            BlockTileEntity tileEntity = (BlockTileEntity) nmsBlock;
+        TileEntity tileEntity = nmsWorld.getTileEntity(blockPosition);
 
-            Block.getDrops(nmsBlock.getBlockData(), nmsWorld, blockPosition, tileEntity.createTile(nmsBlock.), null, nmsTool);
-        }
+        List<net.minecraft.server.v1_14_R1.ItemStack> drops =
+                Block.getDrops(blockData, nmsWorld, blockPosition, tileEntity, null, nmsTool);
 
-        if (tool.getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0) {
-            net.minecraft.server.v1_14_R1.ItemStack item = nmsBlock.getBlockData().
-            ItemStack craftItemStack = CraftItemStack.asBukkitCopy(item);
-            items.add(craftItemStack);
-            return items;
-        }
-
-        items.addAll(block.getDrops(tool));
-
-        int count = nmsBlock.getDropCount(
-                blockData,
-                tool.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS),
-                getNmsBlockAccess(),
-                blockPosition,
-                ThreadLocalRandom.current()
-        );
-
-        items.forEach(item -> item.setAmount(count));
-        return items;
+        return drops.stream().map(CraftItemStack::asBukkitCopy).collect(Collectors.toList());
     }
 }

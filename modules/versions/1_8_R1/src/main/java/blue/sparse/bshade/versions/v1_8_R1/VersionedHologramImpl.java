@@ -51,9 +51,9 @@ public class VersionedHologramImpl extends VersionedHologram {
             return;
         }
 
+        Location location = hologram.getLocation();
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
-            Location location = hologram.getLocation();
 
             EntityArmorStand stand;
 
@@ -79,7 +79,6 @@ public class VersionedHologramImpl extends VersionedHologram {
                     location.getPitch()
             );
 
-
             sendPacketNearby(new PacketPlayOutEntityTeleport(stand));
             sendPacketNearby(new PacketPlayOutEntityMetadata(stand.getId(), stand.getDataWatcher(), true));
             yOffset -= hologram.getLineSpacing();
@@ -97,6 +96,6 @@ public class VersionedHologramImpl extends VersionedHologram {
         //is lower for a version, too big of a radius will make the server filter it out as "too big" of a call.
         location.getWorld().getLivingEntities().stream()
                 .filter(entity -> entity instanceof Player && entity.getLocation().distanceSquared(location) < 64*64)
-                .forEach(entity -> {sendPacket((Player) entity, packet); entity.sendMessage("Test?");});
+                .forEach(entity -> sendPacket((Player) entity, packet));
     }
 }
