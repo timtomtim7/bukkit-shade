@@ -81,3 +81,7 @@ Bukkit Version: 1.13.1-R0.1-SNAPSHOT
 1.13.2
 NMS Version: 1_13_R2
 Bukkit Version: 1.13.2-R0.1-SNAPSHOT
+
+1.14
+NMS Version: 1_14_R1
+Bukkit Version: 1.14-R0.1-SNAPSHOT

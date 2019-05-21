@@ -1,11 +1,12 @@
 package blue.sparse.bshade.versions.v1_13_R2;
 
 import blue.sparse.bshade.versions.api.VersionedEntity;
-import net.minecraft.server.v1_13_R2.CombatEntry;
-import net.minecraft.server.v1_13_R2.CombatTracker;
-import net.minecraft.server.v1_13_R2.DamageSource;
-import net.minecraft.server.v1_13_R2.EntityLiving;
+import com.mojang.authlib.GameProfile;
+import net.minecraft.server.v1_13_R2.*;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
@@ -14,8 +15,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class VersionedEntityImpl extends VersionedEntity {
+
 
     public VersionedEntityImpl(Entity entity) {
         super(entity);
@@ -26,7 +29,7 @@ public class VersionedEntityImpl extends VersionedEntity {
     }
 
     @Override
-    public List<ItemStack> getDrops(int looting) {
+    public List<ItemStack> getDrops(int looting, boolean forceLooting) {
 
         List<ItemStack> items = new ArrayList<>();
 
@@ -38,6 +41,8 @@ public class VersionedEntityImpl extends VersionedEntity {
         Field drops;
 
         try {
+            DamageSource lastDamageSource = DamageSource.GENERIC;
+
             drops = EntityLiving.class.getDeclaredField("drops");
             drops.setAccessible(true);
             drops.set(livingNmsEntity, items);
@@ -45,17 +50,32 @@ public class VersionedEntityImpl extends VersionedEntity {
             Method addDropsMethod = EntityLiving.class.getDeclaredMethod("a", boolean.class, int.class, DamageSource.class);
             addDropsMethod.setAccessible(true);
 
-            DamageSource lastDamageSource = DamageSource.GENERIC;
+            if(forceLooting) {
+                EntityHuman human = new EntityHuman(nmsEntity.getWorld(), new GameProfile(UUID.randomUUID(), "fake")) {
+                    public boolean isSpectator() {
+                        return false;
+                    }
+                    public boolean u() {
+                        return false;
+                    }
+                };
 
-            CombatTracker combatTracker = livingNmsEntity.getCombatTracker();
-            Field combatEntryListField = CombatTracker.class.getDeclaredField("a");
-            combatEntryListField.setAccessible(true);
+                ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
+                item.addUnsafeEnchantment(Enchantment.LOOT_BONUS_MOBS, looting);
+                human.setSlot(EnumItemSlot.MAINHAND, CraftItemStack.asNMSCopy(item));
 
-            List<?> combatEntryList = (List<?>) combatEntryListField.get(combatTracker);
+                lastDamageSource = DamageSource.playerAttack(human);
+            } else {
+                Field combatEntryListField = CombatTracker.class.getDeclaredField("a");
+                combatEntryListField.setAccessible(true);
 
-            if (!combatEntryList.isEmpty()) {
-                Object lastEntry = combatEntryList.get(combatEntryList.size() - 1);
-                lastDamageSource = ((CombatEntry) lastEntry).a();
+                CombatTracker combatTracker = livingNmsEntity.getCombatTracker();
+                List<?> combatEntryList = (List<?>) combatEntryListField.get(combatTracker);
+
+                if (!combatEntryList.isEmpty()) {
+                    Object lastEntry = combatEntryList.get(combatEntryList.size() - 1);
+                    lastDamageSource = ((CombatEntry) lastEntry).a();
+                }
             }
 
             addDropsMethod.invoke(livingNmsEntity, true, looting, lastDamageSource);

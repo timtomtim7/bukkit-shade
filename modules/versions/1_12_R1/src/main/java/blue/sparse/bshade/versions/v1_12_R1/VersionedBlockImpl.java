@@ -6,6 +6,7 @@ import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
@@ -58,13 +59,16 @@ public class VersionedBlockImpl extends VersionedBlock {
     }
 
     @Override
-    public List<ItemStack> getDrops(int fortune, boolean silkTouch) {
+    public List<ItemStack> getDrops(ItemStack tool) {
         List<ItemStack> items = new ArrayList<>();
         Block nmsBlock = getNmsBlock();
         IBlockData blockData = nmsBlock.getBlockData();
         BlockPosition blockPosition = getNmsBlockPosition();
         CraftWorld craftWorld = (CraftWorld) block.getWorld();
         WorldServer nmsWorld = craftWorld.getHandle();
+
+        boolean silkTouch = tool.getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
+        int fortune = tool.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS);
 
         if (silkTouch) {
             net.minecraft.server.v1_12_R1.ItemStack item = nmsBlock.a(nmsWorld, blockPosition, blockData);

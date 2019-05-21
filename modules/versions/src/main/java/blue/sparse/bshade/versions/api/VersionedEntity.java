@@ -12,5 +12,9 @@ public abstract class VersionedEntity {
         this.entity = entity;
     }
 
-    public abstract List<ItemStack> getDrops(int looting);
+    public List<ItemStack> getDrops(int looting) {
+        return getDrops(looting, true);
+    }
+
+    public abstract List<ItemStack> getDrops(int looting, boolean forceLooting);
 }

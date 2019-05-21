@@ -3,18 +3,13 @@ package blue.sparse.bshade.versions.v1_13_R2;
 import blue.sparse.bshade.versions.api.VersionedHologram;
 import blue.sparse.bshade.versions.holograms.Hologram;
 import net.minecraft.server.v1_13_R2.*;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_13_R2.util.CraftChatMessage;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class VersionedHologramImpl extends VersionedHologram {
 
@@ -23,7 +18,6 @@ public class VersionedHologramImpl extends VersionedHologram {
 
     public VersionedHologramImpl(Hologram hologram) {
         super(hologram);
-        update();
     }
 
     @Override
@@ -32,52 +26,17 @@ public class VersionedHologramImpl extends VersionedHologram {
     }
 
     @Override
-    public void tick() {
-        handleNearbyPlayers();
-    }
-
     public void spawnForPlayer(Player player) {
-        player.sendMessage("Spawning a hologram for you.");
         for (EntityArmorStand stand : stands) {
             sendPacket(player, new PacketPlayOutSpawnEntityLiving(stand));
         }
     }
 
+    @Override
     public void destroyForPlayer(Player player) {
-        player.sendMessage("Destroying a hologram for you.");
         for (EntityArmorStand stand : stands) {
             sendPacket(player, new PacketPlayOutEntityDestroy(stand.getId()));
         }
-    }
-
-    public void handleNearbyPlayers() {
-        if (!hologram.isVisible())
-            return;
-
-        Location location = hologram.getLocation();
-        List<Player> nearbyPlayers = location.getWorld().getNearbyEntities(location, 256.0, 256.0, 256.0).stream()
-                .filter(entity -> entity instanceof Player)
-                .map(player -> (Player) player)
-                .collect(Collectors.toList());
-
-        for (Player player : nearbyPlayers) {
-            if (!awarePlayers.contains(player)) {
-                spawnForPlayer(player);
-                awarePlayers.add(player);
-            }
-        }
-
-        ArrayList<Player> removedPlayers = new ArrayList<>();
-        for (Player player : awarePlayers) {
-            if (!nearbyPlayers.contains(player)) {
-                if (player.isOnline()) {
-                    destroyForPlayer(player);
-                }
-                removedPlayers.add(player);
-            }
-        }
-
-        awarePlayers.removeAll(removedPlayers);
     }
 
     @Override
@@ -127,11 +86,7 @@ public class VersionedHologramImpl extends VersionedHologram {
             yOffset -= hologram.getLineSpacing();
         }
 
-        handleNearbyPlayers();
-    }
-
-    private void sendPacket(List<Player> players, Packet<?> packet) {
-        players.forEach(player -> sendPacket(player, packet));
+        hologram.handleNearbyPlayers();
     }
 
     private void sendPacket(Player player, Packet<?> packet) {

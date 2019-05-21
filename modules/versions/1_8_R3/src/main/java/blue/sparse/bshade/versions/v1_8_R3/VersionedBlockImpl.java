@@ -6,9 +6,12 @@ import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_8_R3.util.CraftMagicNumbers;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -58,15 +61,23 @@ public class VersionedBlockImpl extends VersionedBlock {
     }
 
     @Override
-    public List<ItemStack> getDrops(int fortune, boolean silkTouch) {
+    public List<ItemStack> getDrops(ItemStack tool) {
         List<ItemStack> items = new ArrayList<>();
         Block nmsBlock = getNmsBlock();
 
+        boolean silkTouch = tool.getEnchantmentLevel(Enchantment.SILK_TOUCH) != 0;
+        int fortune = tool.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS);
+
         if (silkTouch) {
-            net.minecraft.server.v1_8_R3.ItemStack item = new net.minecraft.server.v1_8_R3.ItemStack(getNmsBlock());
-            CraftItemStack craftItemStack = CraftItemStack.asCraftMirror(item);
-            items.add(craftItemStack);
-            return items;
+            try {
+                Method blockToSilkItem = Block.class.getDeclaredMethod("i", IBlockData.class);
+                net.minecraft.server.v1_8_R3.ItemStack item = (net.minecraft.server.v1_8_R3.ItemStack) blockToSilkItem.invoke(nmsBlock, nmsBlock.getBlockData());
+                CraftItemStack craftItemStack = CraftItemStack.asCraftMirror(item);
+                items.add(craftItemStack);
+                return items;
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
         }
 
         items.addAll(block.getDrops());

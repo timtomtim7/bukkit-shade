@@ -6,6 +6,7 @@ import org.bukkit.craftbukkit.v1_13_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_13_R1.util.CraftMagicNumbers;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
@@ -57,8 +58,9 @@ public class VersionedBlockImpl extends VersionedBlock {
         return (int) (1f/getNmsBlock().getBlockData().e(getNmsBlockAccess(), getNmsBlockPosition()));
     }
 
+
     @Override
-    public List<ItemStack> getDrops(int fortune, boolean silkTouch) {
+    public List<ItemStack> getDrops(ItemStack tool) {
         List<ItemStack> items = new ArrayList<>();
         Block nmsBlock = getNmsBlock();
         IBlockData blockData = nmsBlock.getBlockData();
@@ -66,15 +68,23 @@ public class VersionedBlockImpl extends VersionedBlock {
         CraftWorld craftWorld = (CraftWorld) block.getWorld();
         WorldServer nmsWorld = craftWorld.getHandle();
 
-        if (silkTouch) {
+        if (tool.getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0) {
             net.minecraft.server.v1_13_R1.ItemStack item = nmsBlock.a(nmsWorld, blockPosition, blockData);
-            CraftItemStack craftItemStack = CraftItemStack.asCraftMirror(item);
+            ItemStack craftItemStack = CraftItemStack.asBukkitCopy(item);
             items.add(craftItemStack);
             return items;
         }
 
-        items.addAll(block.getDrops());
-        int count = nmsBlock.getDropCount(blockData, fortune, getNmsBlockAccess(), blockPosition, ThreadLocalRandom.current());
+        items.addAll(block.getDrops(tool));
+
+        int count = nmsBlock.getDropCount(
+                blockData,
+                tool.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS),
+                getNmsBlockAccess(),
+                blockPosition,
+                ThreadLocalRandom.current()
+        );
+
         items.forEach(item -> item.setAmount(count));
         return items;
     }

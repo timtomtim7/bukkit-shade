@@ -1,11 +1,12 @@
-package blue.sparse.bshade.versions.v1_9_R2;
+package blue.sparse.bshade.versions.v1_14_R1;
 
 import blue.sparse.bshade.versions.api.VersionedBlock;
-import net.minecraft.server.v1_9_R2.*;
-import org.bukkit.craftbukkit.v1_9_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_9_R2.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_9_R2.util.CraftMagicNumbers;
+import net.minecraft.server.v1_14_R1.*;
+import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_14_R1.util.CraftMagicNumbers;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
@@ -43,8 +44,8 @@ public class VersionedBlockImpl extends VersionedBlock {
         );
 
         Collection<Entity> entities = block.getWorld().getNearbyEntities(block.getLocation(), 20, 20, 20);
-        for(Entity entity : entities) {
-            if(!(entity instanceof CraftPlayer))
+        for (Entity entity : entities) {
+            if (!(entity instanceof CraftPlayer))
                 continue;
 
             CraftPlayer player = (CraftPlayer) entity;
@@ -54,27 +55,43 @@ public class VersionedBlockImpl extends VersionedBlock {
 
     @Override
     public int getBreakTicks() {
-        return (int) (1f/getNmsBlock().getBlockData().b(getNmsBlockAccess(), getNmsBlockPosition()));
+        return (int) (1f / getNmsBlock().getBlockData().e(getNmsBlockAccess(), getNmsBlockPosition()));
     }
 
     @Override
-    public List<ItemStack> getDrops(int fortune, boolean silkTouch) {
+    public List<ItemStack> getDrops(ItemStack tool) {
         List<ItemStack> items = new ArrayList<>();
         Block nmsBlock = getNmsBlock();
         IBlockData blockData = nmsBlock.getBlockData();
         BlockPosition blockPosition = getNmsBlockPosition();
         CraftWorld craftWorld = (CraftWorld) block.getWorld();
         WorldServer nmsWorld = craftWorld.getHandle();
+        List<net.minecraft.server.v1_14_R1.ItemStack> nmsItems = new ArrayList<>();
+        net.minecraft.server.v1_14_R1.ItemStack nmsTool = CraftItemStack.asNMSCopy(tool);
 
-        if (silkTouch) {
-            net.minecraft.server.v1_9_R2.ItemStack item = nmsBlock.a(nmsWorld, blockPosition, blockData);
-            CraftItemStack craftItemStack = CraftItemStack.asCraftMirror(item);
+        if(nmsBlock instanceof BlockTileEntity) {
+            BlockTileEntity tileEntity = (BlockTileEntity) nmsBlock;
+
+            Block.getDrops(nmsBlock.getBlockData(), nmsWorld, blockPosition, tileEntity.createTile(nmsBlock.), null, nmsTool);
+        }
+
+        if (tool.getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0) {
+            net.minecraft.server.v1_14_R1.ItemStack item = nmsBlock.getBlockData().
+            ItemStack craftItemStack = CraftItemStack.asBukkitCopy(item);
             items.add(craftItemStack);
             return items;
         }
 
-        items.addAll(block.getDrops());
-        int count = nmsBlock.getDropCount(fortune, ThreadLocalRandom.current());
+        items.addAll(block.getDrops(tool));
+
+        int count = nmsBlock.getDropCount(
+                blockData,
+                tool.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS),
+                getNmsBlockAccess(),
+                blockPosition,
+                ThreadLocalRandom.current()
+        );
+
         items.forEach(item -> item.setAmount(count));
         return items;
     }

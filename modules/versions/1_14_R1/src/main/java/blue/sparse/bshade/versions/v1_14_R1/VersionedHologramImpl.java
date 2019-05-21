@@ -1,11 +1,11 @@
-package blue.sparse.bshade.versions.v1_9_R2;
+package blue.sparse.bshade.versions.v1_14_R1;
 
 import blue.sparse.bshade.versions.api.VersionedHologram;
 import blue.sparse.bshade.versions.holograms.Hologram;
-import net.minecraft.server.v1_9_R2.*;
+import net.minecraft.server.v1_14_R1.*;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_9_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -14,16 +14,10 @@ import java.util.List;
 public class VersionedHologramImpl extends VersionedHologram {
 
     private List<EntityArmorStand> stands = new ArrayList<>();
-    private List<Player> nearbyPlayers = new ArrayList<>();
+    private List<Player> awarePlayers = new ArrayList<>();
 
-    protected VersionedHologramImpl(Hologram hologram) {
+    public VersionedHologramImpl(Hologram hologram) {
         super(hologram);
-        Location location = hologram.getLocation();
-        location.getWorld().getNearbyEntities(location, 256.0, 256.0, 256.0).forEach(entity -> {
-            if (entity instanceof Player) {
-                nearbyPlayers.add((Player) entity);
-            }
-        });
     }
 
     @Override
@@ -32,47 +26,67 @@ public class VersionedHologramImpl extends VersionedHologram {
     }
 
     @Override
-    public void update(Player player) {
+    public void spawnForPlayer(Player player) {
         for (EntityArmorStand stand : stands) {
-            sendPacket(player, new PacketPlayOutSpawnEntity(stand, 0));
+            sendPacket(player, new PacketPlayOutSpawnEntityLiving(stand));
+        }
+    }
+
+    @Override
+    public void destroyForPlayer(Player player) {
+        for (EntityArmorStand stand : stands) {
+            sendPacket(player, new PacketPlayOutEntityDestroy(stand.getId()));
         }
     }
 
     @Override
     public void update() {
-        float yOffset = 0f;
+        double yOffset = hologram.getHieght() - hologram.getLineSpacing();
 
-        List<String> lines = hologram.getLines();
+        List<String> lines = hologram.getLineContent();
+
+        if (!hologram.isVisible()) {
+            awarePlayers.forEach(this::destroyForPlayer);
+            awarePlayers.clear();
+            return;
+        }
+
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
-            EntityArmorStand stand;
+            ChatComponentText lineComponent = new ChatComponentText(line);
             Location location = hologram.getLocation();
+
+            EntityArmorStand stand;
 
             if (i < stands.size()) {
                 stand = stands.get(i);
+                stand.setCustomName(lineComponent);
             } else {
                 World world = ((CraftWorld) location.getWorld()).getHandle();
                 stand = new EntityArmorStand(world, location.getX(), location.getY(), location.getZ());
                 stands.add(stand);
-                sendPacketNearby(new PacketPlayOutSpawnEntity(stand, 0));
+                stand.setCustomName(lineComponent);
+                stand.setInvisible(true);
+                stand.setCustomNameVisible(true);
+                stand.setNoGravity(true);
+                sendPacketNearby(new PacketPlayOutSpawnEntityLiving(stand));
             }
 
-            stand.setCustomNameVisible(true);
-            stand.setInvisible(true);
-            stand.setCustomName(line);
             stand.setLocation(
                     location.getX(),
-                    location.getY() - yOffset,
+                    location.getY() + yOffset,
                     location.getZ(),
                     location.getYaw(),
                     location.getPitch()
             );
 
-            sendPacketNearby(new PacketPlayOutEntityTeleport(stand));
 
-            yOffset -= .23;
+            sendPacketNearby(new PacketPlayOutEntityTeleport(stand));
+            sendPacketNearby(new PacketPlayOutEntityMetadata(stand.getId(), stand.getDataWatcher(), true));
+            yOffset -= hologram.getLineSpacing();
         }
 
+        hologram.handleNearbyPlayers();
     }
 
     private void sendPacket(Player player, Packet<?> packet) {

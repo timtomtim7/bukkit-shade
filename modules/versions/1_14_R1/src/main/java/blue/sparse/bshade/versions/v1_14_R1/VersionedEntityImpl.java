@@ -1,11 +1,11 @@
-package blue.sparse.bshade.versions.v1_10_R1;
+package blue.sparse.bshade.versions.v1_14_R1;
 
 import blue.sparse.bshade.versions.api.VersionedEntity;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.server.v1_10_R1.*;
+import net.minecraft.server.v1_14_R1.*;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
@@ -24,7 +24,7 @@ public class VersionedEntityImpl extends VersionedEntity {
         super(entity);
     }
 
-    private net.minecraft.server.v1_10_R1.Entity getNmsEntity() {
+    private net.minecraft.server.v1_14_R1.Entity getNmsEntity() {
         return ((CraftEntity) entity).getHandle();
     }
 
@@ -33,7 +33,7 @@ public class VersionedEntityImpl extends VersionedEntity {
 
         List<ItemStack> items = new ArrayList<>();
 
-        net.minecraft.server.v1_10_R1.Entity nmsEntity = getNmsEntity();
+        net.minecraft.server.v1_14_R1.Entity nmsEntity = getNmsEntity();
         if (!(nmsEntity instanceof EntityLiving))
             return items;
 
@@ -55,7 +55,10 @@ public class VersionedEntityImpl extends VersionedEntity {
                     public boolean isSpectator() {
                         return false;
                     }
-                    public boolean z() {
+                    public boolean isCreative() {
+                        return false;
+                    }
+                    public boolean u() {
                         return false;
                     }
                 };

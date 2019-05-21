@@ -1,17 +1,19 @@
 rootProject.name = 'bukkit-shade'
 
 def collect = new ArrayList<String>()
-def nmsNames = new File(rootProject.projectDir.absolutePath, "modules/versions/nms.txt")
+def nmsNames = new File(rootProject.projectDir.absolutePath, "modules/versions/NMS.txt")
 println nmsNames.absolutePath
+
 def lineIndex = 0
 def current = new StringBuilder()
+
 for (line in nmsNames.readLines()) {
     if (lineIndex < 3) {
         current.append(line + "\n")
         lineIndex++
         continue
     }
-
+    
     def list = current.toString().readLines()
     def spigotVersion = list[0].trim()
     def nmsVersion = list[1].split(":")[1].trim()
@@ -57,3 +59,6 @@ void setupModule(String str) {
     include "modules/$str"
     findProject(":modules/$str")?.name = str.split("/").last()
 }
+include 'versions:1_14_R1'
+findProject(':versions:1_14_R1')?.name = '1_14_R1'
+

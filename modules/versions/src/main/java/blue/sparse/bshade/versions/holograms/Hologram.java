@@ -4,6 +4,7 @@ import blue.sparse.bshade.versions.Versioned;
 import blue.sparse.bshade.versions.api.VersionedHologram;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 public class Hologram {
 	public static final double DEFAULT_LINE_SPACING = .23;
+	public static final int HANDLE_NEARBY_PLAYERS_FREQUENCY = 10;
 	private static List<Hologram> allHolograms = new ArrayList<>();
 	private static int ticksPassed = 0;
 
@@ -24,8 +26,8 @@ public class Hologram {
 
 	private static void tick() {
 		for (Hologram hologram : allHolograms) {
-			if (ticksPassed % 10 == 0) {
-				hologram.vHologram.tick();
+			if (ticksPassed % HANDLE_NEARBY_PLAYERS_FREQUENCY == 0) {
+				hologram.handleNearbyPlayers();
 			}
 
 			boolean updated = false;
@@ -49,10 +51,13 @@ public class Hologram {
 	public static List<Hologram> getAllHolograms() {
 		return allHolograms;
 	}
+
 	private List<HologramLine> lines = new ArrayList<>();
-	private Location location;
+	private List<Player> awarePlayers = new ArrayList<>();
 	private boolean isVisible = true;
 	private double lineSpacing;
+	private Location location;
+
 	private VersionedHologram vHologram;
 
 	public Hologram(Location location, double lineSpacing, HologramLine... lines) {
@@ -60,6 +65,7 @@ public class Hologram {
 		this.lineSpacing = lineSpacing;
 		this.location = location;
 		this.vHologram = Versioned.getHologram(this);
+		this.vHologram.update();
 		allHolograms.add(this);
 	}
 
@@ -70,6 +76,7 @@ public class Hologram {
 	public Hologram(Location location, String... lines) {
 		this(location, DEFAULT_LINE_SPACING, Arrays.stream(lines).map(HologramLineStatic::new).toArray(HologramLine[]::new));
 	}
+
 
 	public List<HologramLine> getLines() {
 		return Collections.unmodifiableList(lines);
@@ -155,5 +162,33 @@ public class Hologram {
 
 	public void setLineSpacing(double lineSpacing) {
 		this.lineSpacing = lineSpacing;
+	}
+
+	public void handleNearbyPlayers() {
+		if (!isVisible)
+			return;
+
+		List<Player> nearbyPlayers = location.getWorld().getPlayers().stream()
+				.filter(player -> player.getLocation().distanceSquared(location) < 256*256)
+				.collect(Collectors.toList());
+
+		for (Player player : nearbyPlayers) {
+			if (!awarePlayers.contains(player)) {
+				vHologram.spawnForPlayer(player);
+				awarePlayers.add(player);
+			}
+		}
+
+		ArrayList<Player> removedPlayers = new ArrayList<>();
+		for (Player player : awarePlayers) {
+			if (!nearbyPlayers.contains(player)) {
+				if (player.isOnline()) {
+					vHologram.destroyForPlayer(player);
+				}
+				removedPlayers.add(player);
+			}
+		}
+
+		awarePlayers.removeAll(removedPlayers);
 	}
 }

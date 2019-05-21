@@ -13,5 +13,7 @@ public abstract class VersionedHologram {
 
     public abstract void update();
     public abstract void delete();
-    public abstract void tick();
+
+    public abstract void spawnForPlayer(Player player);
+    public abstract void destroyForPlayer(Player player);
 }

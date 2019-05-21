@@ -25,31 +25,30 @@ public class VersionedEntityImpl extends VersionedEntity {
     }
 
     @Override
-    public List<ItemStack> getDrops(int looting) {
+    public List<ItemStack> getDrops(int looting, boolean forceLooting) {
 
         List<ItemStack> items = new ArrayList<>();
         if (!(getNmsEntity() instanceof EntityLiving))
             return items;
 
-        EntityLiving nmsEntity = (EntityLiving) getNmsEntity();
         Random random = ThreadLocalRandom.current();
-
+        EntityLiving nmsEntity = (EntityLiving) getNmsEntity();
         Field drops;
 
         try {
-            drops = nmsEntity.getClass().getField("drops");
+            drops = EntityLiving.class.getDeclaredField("drops");
             drops.setAccessible(true);
             drops.set(nmsEntity, items);
 
-            Method dropDeathLoot = nmsEntity.getClass().getDeclaredMethod("dropDeathLoot", boolean.class, int.class);
+            Method dropDeathLoot = EntityLiving.class.getDeclaredMethod("dropDeathLoot", boolean.class, int.class);
             dropDeathLoot.setAccessible(true);
             dropDeathLoot.invoke(nmsEntity, true, looting);
 
-            Method dropEquipment = nmsEntity.getClass().getDeclaredMethod("dropEquipment", boolean.class, int.class);
+            Method dropEquipment = EntityLiving.class.getDeclaredMethod("dropEquipment", boolean.class, int.class);
             dropEquipment.setAccessible(true);
             dropEquipment.invoke(nmsEntity, true, looting);
 
-            Method getRareDrop = nmsEntity.getClass().getDeclaredMethod("getRareDrop");
+            Method getRareDrop = EntityLiving.class.getDeclaredMethod("getRareDrop");
             getRareDrop.setAccessible(true);
 
             if(random.nextFloat() < 0.025F + (float) looting * 0.01F)
