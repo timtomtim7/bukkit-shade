@@ -49,7 +49,7 @@ for (line in nmsNames.readLines()) {
     }
 }
 
-collect.addAll(["commands", "persistent", "util", "versions"])
+collect.addAll(["commands", "data", "util", "versions"])
 
 collect.each {
     setupModule(it)

@@ -32,6 +32,8 @@
       <module name="blue.sparse.commands.test" target="1.8" />
       <module name="blue.sparse.v1_14_R1.main" target="1.8" />
       <module name="blue.sparse.v1_14_R1.test" target="1.8" />
+      <module name="bukkit-shade.persistent.main" target="1.8" />
+      <module name="bukkit-shade.persistent.test" target="1.8" />
       <module name="commands.blue.sparse.bukkit-shade.commands.main" target="1.8" />
       <module name="commands.blue.sparse.bukkit-shade.commands.test" target="1.8" />
       <module name="persistent.blue.sparse.bukkit-shade.persistent.main" target="1.8" />
