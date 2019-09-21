@@ -1,0 +1,5 @@
+name: TestMenu
+version: v1.0
+author: Tom
+main: blue.sparse.bshade.menu.test.TestPlugin
+api-version: 1.13

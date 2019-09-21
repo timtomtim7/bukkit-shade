@@ -1,0 +1,11 @@
+
+version '1.0-SNAPSHOT'
+
+dependencies {
+    compile project(":versions")
+    implementation fileTree("../jars/spigot-1.11.jar")
+}
+
+jar {
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+}

@@ -1,0 +1,6 @@
+simple = A simple message.
+placeholders = A message with {value} placeholders.
+reflectionPlaceholders = A message that {obj.value} accesses values with reflection.
+numberPlaceholder = Buy {count}x items for ${price #,###.00}.
+conditionalPlaceholderNumber = Buy {count}x item{if count > 1 "s"}
+conditionalPlaceholderBoolean = Flight: {if enabled "&aEnabled" else "&cDisabled"}

@@ -45,9 +45,14 @@ public class GroupCommand extends CommandPart {
 		final String name = input.takeUntil(Character::isWhitespace).toLowerCase();
 		input.takeWhile(Character::isWhitespace);
 
-		final List<CommandPart> matching = subCommands.stream().filter(
-				it -> it.names.stream().map(String::toLowerCase).anyMatch(n -> n.contains(name.toLowerCase()))
-		).collect(Collectors.toList());
+		final List<CommandPart> matching;
+		if (name.isEmpty()) {
+			matching = new ArrayList<>();
+		} else {
+			matching = subCommands.stream().filter(
+					it -> it.names.stream().map(String::toLowerCase).anyMatch(n -> n.startsWith(name.toLowerCase()))
+			).collect(Collectors.toList());
+		}
 
 		if (matching.isEmpty() && defaultSubCommand != null) {
 			input.setIndex(indexBeforeName);

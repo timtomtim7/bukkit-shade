@@ -13,9 +13,17 @@ import java.util.stream.Collectors;
 public abstract class NBTType<E extends NBTElement> {
 	private static Map<Class<?>, NBTType<?>> rawClasses = new HashMap<>();
 	private static Map<NBTType<?>, Class<? extends NBTElement>> typeClasses = new HashMap<>();
+	private static Map<Class<?>, Class<?>> primitives = new HashMap<>();
 	private static List<NBTType<?>> types = new ArrayList<>();
 
 	private static void initClasses() {
+		primitives.put(Byte.class, Byte.TYPE);
+		primitives.put(Short.class, Short.TYPE);
+		primitives.put(Integer.class, Integer.TYPE);
+		primitives.put(Long.class, Long.TYPE);
+		primitives.put(Float.class, Float.TYPE);
+		primitives.put(Double.class, Double.TYPE);
+
 		rawClasses.put(Byte.class, NBTByte.Type.INSTANCE);
 		rawClasses.put(Byte.TYPE, NBTByte.Type.INSTANCE);
 		rawClasses.put(Short.class, NBTShort.Type.INSTANCE);
@@ -53,6 +61,9 @@ public abstract class NBTType<E extends NBTElement> {
 	}
 
 	public static NBTType<?> getType(int typeID) {
+		if (rawClasses.isEmpty())
+			initClasses();
+
 		final NBTType<?> result = types.get(typeID - 1);
 		if(result.typeID == typeID)
 			return result;
@@ -98,9 +109,18 @@ public abstract class NBTType<E extends NBTElement> {
 				.stream()
 				.filter(it -> it.isAssignableFrom(clazz))
 				.findFirst()
-				.orElseThrow(IllegalArgumentException::new);
+				.orElseThrow(() -> new IllegalArgumentException("Not an NBT primitive: "+clazz.getName()));
 
-		rawClass = Primitives.unwrap(rawClass);
+		Class<?> primitive = primitives.get(rawClass);
+		if(primitive != null)
+			rawClass = primitive;
+
+//		if(rawClass == Byte.class)
+//			rawClass = Byte.TYPE;
+//		else if(rawClass == Short.class)
+//			rawClass = Short.TYPE
+
+//		rawClass = Primitives.unwrap(rawClass);
 
 		final NBTType<?> type = rawClasses.get(rawClass);
 

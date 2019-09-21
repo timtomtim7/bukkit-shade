@@ -10,10 +10,7 @@ import org.bukkit.command.CommandSender;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,17 +18,14 @@ import java.util.stream.Collectors;
 
 public final class ReflectionCommandLoader {
 
-	private ReflectionCommandLoader() {
-	}
-
 	//	@SuppressWarnings("unchecked")
 	public static List<Command> getTopLevelCommands(Object container) throws ReflectiveOperationException {
 		final List<CommandPart> commands = new ArrayList<>();
 
-		if(container instanceof CommandGroup) {
+		if (container instanceof CommandGroup) {
 			GroupCommand parent = getGroup(null, container.getClass(), ((CommandGroup) container));
 			commands.add(parent);
-		}else{
+		} else {
 			commands.addAll(getGroupCommands(container, null));
 			commands.addAll(getSingleCommands(container, null));
 		}
@@ -53,7 +47,14 @@ public final class ReflectionCommandLoader {
 			if (!CommandGroup.class.isAssignableFrom(clazz))
 				continue;
 
-			final CommandGroup group = (CommandGroup) clazz.getConstructors()[0].newInstance(container);
+			Constructor<?> constructor = clazz.getConstructors()[0];
+			final CommandGroup group;
+			if ((clazz.getModifiers() & Modifier.STATIC) != 0) {
+				group = (CommandGroup) constructor.newInstance();
+			} else {
+				group = (CommandGroup) constructor.newInstance(container);
+			}
+
 			final GroupCommand groupCommand = getGroup(parent, clazz, group);
 
 			result.add(groupCommand);
@@ -181,5 +182,8 @@ public final class ReflectionCommandLoader {
 			}
 		};
 
+	}
+
+	private ReflectionCommandLoader() {
 	}
 }

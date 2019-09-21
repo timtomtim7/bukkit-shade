@@ -1,0 +1,5 @@
+name: TestI18n
+version: v1.0
+author: Tom
+main: blue.sparse.bshade.i18n.test.TestPlugin
+api-version: 1.13

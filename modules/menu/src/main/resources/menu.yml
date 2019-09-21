@@ -1,0 +1,62 @@
+##################################################################
+#
+# This is the config for the menu identified as test-menu.
+# You can change anything in this to alter the behavior
+# and/or appearance of everything in the menu.
+#
+# If at any point you mess up this file and do not know
+# how to restore it, you can simply delete it and it will
+# be regenerated to the way it was when the plugin was
+# originally installed.
+#
+##################################################################
+
+layout: >
+  .........
+  .A.B.C.D.
+  .........
+
+########################
+#
+# Generic Responses:
+# MESSAGE
+# PLAYER_COMMAND
+# CONSOLE_COMMAND
+# SOUND
+#
+# Custom Responses:
+# SOMETHING
+#
+# Actions:
+# LEFT_CLICK
+# RIGHT_CLICK
+# SHIFT_LEFT_CLICK
+# SHIFT_RIGHT_CLICK
+# MIDDLE_CLICK
+#
+#
+########################
+elements:
+  '.':
+    icon: GLASS_PANE
+    name: "Border Item"
+    responses:
+    - action: LEFT_CLICK
+      response:
+        type: MESSAGE
+        value: "You clicked the border!"
+  'A':
+    icon: COMPASS
+    name: "Spawn"
+    responses:
+    - action: LEFT_CLICK
+      response:
+        type: PLAYER_COMMAND
+        value: "spawn"
+  'B':
+    icon: STONE
+    name: "Something"
+    responses:
+    - action: LEFT_CLICK
+      response: SOMETHING
+

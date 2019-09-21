@@ -89,43 +89,55 @@ public class NBTCompound extends NBTElement<NBTCompound.Type, Data> implements D
 
 
 	@Override
-	public void setByte(String name, byte value) {
+	public Data setByte(String name, byte value) {
 		setElement(name, new NBTByte(value));
+		return this;
 	}
 
 	@Override
-	public void setShort(String name, short value) {
+	public Data setShort(String name, short value) {
 		setElement(name, new NBTShort(value));
+		return this;
 	}
 
 	@Override
-	public void setInt(String name, int value) {
+	public Data setInt(String name, int value) {
 		setElement(name, new NBTInteger(value));
+		return this;
 	}
 
 	@Override
-	public void setLong(String name, long value) {
+	public Data setLong(String name, long value) {
 		setElement(name, new NBTLong(value));
+		return this;
 	}
 
 	@Override
-	public void setFloat(String name, float value) {
+	public Data setFloat(String name, float value) {
 		setElement(name, new NBTFloat(value));
+		return this;
 	}
 
 	@Override
-	public void setDouble(String name, double value) {
+	public Data setDouble(String name, double value) {
 		setElement(name, new NBTDouble(value));
+		return this;
 	}
 
 	@Override
-	public void setRaw(String name, Object value) {
+	public Data setRaw(String name, Object value) {
 		this.value.put(name, NBTType.fromRawToNBT(value));
+		return this;
 	}
 
 	@Override
 	public Data getRawValue() {
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "NBTCompound(keys="+keys().toString()+")";
 	}
 
 	@Override

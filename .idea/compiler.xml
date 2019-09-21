@@ -20,8 +20,8 @@
       <module name="blue.sparse.bukkit-shade.v1_1.test" target="1.8" />
       <module name="blue.sparse.bukkit-shade.v1_13_R.main" target="1.8" />
       <module name="blue.sparse.bukkit-shade.v1_13_r.main" target="1.8" />
-      <module name="blue.sparse.bukkit-shade.v1_13_r.test" target="1.8" />
       <module name="blue.sparse.bukkit-shade.v1_13_R.test" target="1.8" />
+      <module name="blue.sparse.bukkit-shade.v1_13_r.test" target="1.8" />
       <module name="blue.sparse.bukkit-shade.v1_13_R1.main" target="1.8" />
       <module name="blue.sparse.bukkit-shade.v1_13_R1.test" target="1.8" />
       <module name="blue.sparse.bukkit-shade.v1_13_R2.main" target="1.8" />
@@ -32,8 +32,32 @@
       <module name="blue.sparse.commands.test" target="1.8" />
       <module name="blue.sparse.v1_14_R1.main" target="1.8" />
       <module name="blue.sparse.v1_14_R1.test" target="1.8" />
+      <module name="bukkit-shade._1_10_R1.main" target="1.8" />
+      <module name="bukkit-shade._1_10_R1.test" target="1.8" />
+      <module name="bukkit-shade._1_11_R1.main" target="1.8" />
+      <module name="bukkit-shade._1_11_R1.test" target="1.8" />
+      <module name="bukkit-shade._1_12_R1.main" target="1.8" />
+      <module name="bukkit-shade._1_12_R1.test" target="1.8" />
+      <module name="bukkit-shade._1_13_R1.main" target="1.8" />
+      <module name="bukkit-shade._1_13_R1.test" target="1.8" />
+      <module name="bukkit-shade._1_13_R2.main" target="1.8" />
+      <module name="bukkit-shade._1_13_R2.test" target="1.8" />
+      <module name="bukkit-shade._1_14_R1.main" target="1.8" />
+      <module name="bukkit-shade._1_14_R1.test" target="1.8" />
+      <module name="bukkit-shade._1_8_R1.main" target="1.8" />
+      <module name="bukkit-shade._1_8_R1.test" target="1.8" />
+      <module name="bukkit-shade._1_8_R2.main" target="1.8" />
+      <module name="bukkit-shade._1_8_R2.test" target="1.8" />
+      <module name="bukkit-shade._1_8_R3.main" target="1.8" />
+      <module name="bukkit-shade._1_8_R3.test" target="1.8" />
+      <module name="bukkit-shade._1_9_R1.main" target="1.8" />
+      <module name="bukkit-shade._1_9_R1.test" target="1.8" />
+      <module name="bukkit-shade._1_9_R2.main" target="1.8" />
+      <module name="bukkit-shade._1_9_R2.test" target="1.8" />
       <module name="bukkit-shade.persistent.main" target="1.8" />
       <module name="bukkit-shade.persistent.test" target="1.8" />
+      <module name="bukkit-shade.versions.1_14_R1.main" target="1.8" />
+      <module name="bukkit-shade.versions.1_14_R1.test" target="1.8" />
       <module name="commands.blue.sparse.bukkit-shade.commands.main" target="1.8" />
       <module name="commands.blue.sparse.bukkit-shade.commands.test" target="1.8" />
       <module name="persistent.blue.sparse.bukkit-shade.persistent.main" target="1.8" />

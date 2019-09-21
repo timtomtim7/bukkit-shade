@@ -27,6 +27,11 @@ public class UUIDSerializer implements Serializer<UUID> {
 	@Override
 	public UUID get(Data source, String name) {
 		Data data = source.getData(name);
-		return new UUID(data.getLong("uuidMost"), data.getLong("uuidLeast"));
+		return new UUID(data.getLong("most"), data.getLong("least"));
+	}
+
+	@Override
+	public int getPriority() {
+		return 0;
 	}
 }

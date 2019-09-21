@@ -1,6 +1,5 @@
 package blue.sparse.bshade.data.example;
 
-import blue.sparse.bshade.data.persistent.Persistent;
 import blue.sparse.bshade.data.attach.Attachment;
 import blue.sparse.bshade.data.attach.PlayerAttachment;
 import org.bukkit.entity.Player;
@@ -14,24 +13,15 @@ public class Examples extends JavaPlugin {
 
 		Player player = null;
 		MyPlayerData attachment = Attachment.get(player, MyPlayerData.class);
-		System.out.println(attachment.getDistanceWalked());
+		System.out.println(attachment.distanceWalked);
 	}
 
 	public static class MyPlayerData extends PlayerAttachment {
 
-		@Persistent
-		private double distanceWalked = 0.0;
+		public double distanceWalked = 0.0;
 
 		public MyPlayerData(Player player) {
 			super(player);
-		}
-
-		public double getDistanceWalked() {
-			return distanceWalked;
-		}
-
-		public void setDistanceWalked(double distanceWalked) {
-			this.distanceWalked = distanceWalked;
 		}
 
 	}

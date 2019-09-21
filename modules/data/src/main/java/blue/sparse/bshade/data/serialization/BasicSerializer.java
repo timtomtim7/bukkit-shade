@@ -6,7 +6,12 @@ public class BasicSerializer implements Serializer<Object> {
 
 	@Override
 	public boolean canSerialize(Object object) {
-		return false;
+		try {
+			Data.create().setRaw("_", object);
+			return true;
+		} catch (Throwable t) {
+			return false;
+		}
 	}
 
 	@Override
@@ -19,4 +24,8 @@ public class BasicSerializer implements Serializer<Object> {
 		return source.getRaw(name);
 	}
 
+	@Override
+	public int getPriority() {
+		return Integer.MAX_VALUE;
+	}
 }

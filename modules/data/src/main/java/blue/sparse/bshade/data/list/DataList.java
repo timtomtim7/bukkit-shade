@@ -4,6 +4,7 @@ import blue.sparse.bshade.data.Data;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 public class DataList implements RawList<Data> {
 	private Data[] data;
@@ -71,6 +72,10 @@ public class DataList implements RawList<Data> {
 
 	public void add(Data value) {
 		add(size, value);
+	}
+
+	public void add(Consumer<Data> consumer) {
+		add(Data.create(consumer));
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package blue.sparse.bshade.data;
 
 import blue.sparse.bshade.data.list.*;
 import blue.sparse.bshade.data.nbt.NBTCompound;
+import blue.sparse.bshade.data.serialization.DataSerialization;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +39,10 @@ public interface Data {
 	Collection<String> keys();
 	int size();
 
+	default boolean containsKey(String key) {
+		return keys().contains(key);
+	}
+
 	Object getRawOrNull(String name);
 
 	default Object getRaw(String name) {
@@ -46,6 +51,15 @@ public interface Data {
 			throw new NoSuchElementException(name);
 
 		return raw;
+	}
+
+	@SuppressWarnings("unchecked")
+	default <T> T getSerializedTyped(String name) {
+		return (T) getSerialized(name);
+	}
+
+	default Object getSerialized(String name) {
+		return DataSerialization.read(this, name);
 	}
 
 	default byte getByte(String name) {
@@ -141,147 +155,186 @@ public interface Data {
 	}
 
 
-	void setRaw(String name, Object value);
+	Data setRaw(String name, Object value);
 
-	default void setByte(String name, byte value) {
-		setRaw(name, value);
+	default Data setSerialized(String name, Object value) {
+		DataSerialization.set(this, name, value);
+		return this;
 	}
 
-	default void setShort(String name, short value) {
+	default Data setByte(String name, byte value) {
 		setRaw(name, value);
+		return this;
 	}
 
-	default void setInt(String name, int value) {
+	default Data setShort(String name, short value) {
 		setRaw(name, value);
+		return this;
 	}
 
-	default void setLong(String name, long value) {
+	default Data setInt(String name, int value) {
 		setRaw(name, value);
+		return this;
 	}
 
-	default void setFloat(String name, float value) {
+	default Data setLong(String name, long value) {
 		setRaw(name, value);
+		return this;
 	}
 
-	default void setDouble(String name, double value) {
+	default Data setFloat(String name, float value) {
 		setRaw(name, value);
+		return this;
 	}
 
-	default void setByteArray(String name, byte... value) {
+	default Data setDouble(String name, double value) {
 		setRaw(name, value);
+		return this;
 	}
 
-	default void setIntArray(String name, int... value) {
+	default Data setByteArray(String name, byte... value) {
 		setRaw(name, value);
+		return this;
 	}
 
-	default void setLongArray(String name, long... value) {
+	default Data setIntArray(String name, int... value) {
 		setRaw(name, value);
+		return this;
 	}
 
-	default void setString(String name, String value) {
+	default Data setLongArray(String name, long... value) {
 		setRaw(name, value);
+		return this;
 	}
 
-	default void setData(String name, Data value) {
+	default Data setString(String name, String value) {
 		setRaw(name, value);
+		return this;
 	}
 
-
-	default void setRawList(String name, RawList<?> value) {
+	default Data setData(String name, Data value) {
 		setRaw(name, value);
+		return this;
 	}
 
-	default void setByteList(String name, ByteList value) {
+	default Data setRawList(String name, RawList<?> value) {
+		setRaw(name, value);
+		return this;
+	}
+
+	default Data setByteList(String name, ByteList value) {
 		setRawList(name, value);
+		return this;
 	}
 
-	default void setShortList(String name, ShortList value) {
+	default Data setShortList(String name, ShortList value) {
 		setRawList(name, value);
+		return this;
 	}
 
-	default void setIntList(String name, IntList value) {
+	default Data setIntList(String name, IntList value) {
 		setRawList(name, value);
+		return this;
 	}
 
-	default void setLongList(String name, LongList value) {
+	default Data setLongList(String name, LongList value) {
 		setRawList(name, value);
+		return this;
 	}
 
-	default void setFloatList(String name, FloatList value) {
+	default Data setFloatList(String name, FloatList value) {
 		setRawList(name, value);
+		return this;
 	}
 
-	default void setDoubleList(String name, DoubleList value) {
+	default Data setDoubleList(String name, DoubleList value) {
 		setRawList(name, value);
+		return this;
 	}
 
-	default void setByteArrayList(String name, ByteArrayList value) {
+	default Data setByteArrayList(String name, ByteArrayList value) {
 		setRawList(name, value);
+		return this;
 	}
 
-	default void setIntArrayList(String name, IntArrayList value) {
+	default Data setIntArrayList(String name, IntArrayList value) {
 		setRawList(name, value);
+		return this;
 	}
 
-	default void setLongArrayList(String name, LongArrayList value) {
+	default Data setLongArrayList(String name, LongArrayList value) {
 		setRawList(name, value);
+		return this;
 	}
 
-	default void setStringList(String name, StringList value) {
+	default Data setStringList(String name, StringList value) {
 		setRawList(name, value);
+		return this;
 	}
 
-	default void setDataList(String name, DataList value) {
+	default Data setDataList(String name, DataList value) {
 		setRawList(name, value);
+		return this;
 	}
 
-	default void setData(String name, Consumer<Data> consumer) {
+	default Data setData(String name, Consumer<Data> consumer) {
 		setData(name, Data.create(consumer));
+		return this;
 	}
 
-	default void setByteList(String name, byte... value) {
+	default Data setByteList(String name, byte... value) {
 		setByteList(name, new ByteList(value));
+		return this;
 	}
 
-	default void setShortList(String name, short... value) {
+	default Data setShortList(String name, short... value) {
 		setShortList(name, new ShortList(value));
+		return this;
 	}
 
-	default void setIntList(String name, int... value) {
+	default Data setIntList(String name, int... value) {
 		setIntList(name, new IntList(value));
+		return this;
 	}
 
-	default void setLongList(String name, long... value) {
+	default Data setLongList(String name, long... value) {
 		setLongList(name, new LongList(value));
+		return this;
 	}
 
-	default void setFloatList(String name, float... value) {
+	default Data setFloatList(String name, float... value) {
 		setFloatList(name, new FloatList(value));
+		return this;
 	}
 
-	default void setDoubleList(String name, double... value) {
+	default Data setDoubleList(String name, double... value) {
 		setDoubleList(name, new DoubleList(value));
+		return this;
 	}
 
-	default void setByteArrayList(String name, byte[]... value) {
+	default Data setByteArrayList(String name, byte[]... value) {
 		setByteArrayList(name, new ByteArrayList(value));
+		return this;
 	}
 
-	default void setIntArrayList(String name, int[]... value) {
+	default Data setIntArrayList(String name, int[]... value) {
 		setIntArrayList(name, new IntArrayList(value));
+		return this;
 	}
 
-	default void setLongArrayList(String name, long[]... value) {
+	default Data setLongArrayList(String name, long[]... value) {
 		setLongArrayList(name, new LongArrayList(value));
+		return this;
 	}
 
-	default void setStringList(String name, String... value) {
+	default Data setStringList(String name, String... value) {
 		setStringList(name, new StringList(value));
+		return this;
 	}
 
-	default void setDataList(String name, Data... value) {
+	default Data setDataList(String name, Data... value) {
 		setDataList(name, new DataList(value));
+		return this;
 	}
 
 	void writeBinary(File file);

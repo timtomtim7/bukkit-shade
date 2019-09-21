@@ -1,0 +1,7 @@
+version: 1.0
+name: versions-module
+main: blue.sparse.bshade.versions.TestPlugin
+commands:
+  test:
+    usage: testing
+    description: no
